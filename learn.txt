@@ -1,3 +1,4 @@
 http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_image_display/py_image_display.html#display-image
 http://www.intorobotics.com/9-opencv-tutorials-hand-gesture-detection-recognition/
 http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_table_of_contents_gui/py_table_of_contents_gui.html#py-table-of-content-gui
+https://github.com/VasuAgrawal/GestureDetection
