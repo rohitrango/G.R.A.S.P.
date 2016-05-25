@@ -2,7 +2,7 @@ import numpy as numpy
 import cv2
 
 cam = cv2.VideoCapture(0)
-print "Press 'q' to exit."
+print "\n\nPress 'q' to exit.\n\n"
 while True:
 	ret,frame = cam.read()
 	frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
