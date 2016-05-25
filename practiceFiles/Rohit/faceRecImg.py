@@ -1,4 +1,4 @@
-import cv2, sys
+import cv2, sys, numpy as np
 if(len(sys.argv)==2):
 	cascPath = sys.argv[1]
 else:

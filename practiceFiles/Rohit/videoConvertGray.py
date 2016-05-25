@@ -1,4 +1,4 @@
-import numpy as numpy
+import numpy as np
 import cv2
 
 cam = cv2.VideoCapture(0)
