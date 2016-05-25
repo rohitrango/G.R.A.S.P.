@@ -12,6 +12,8 @@
 
 4. [VasuAgrawal/GestureDetection](https://github.com/VasuAgrawal/GestureDetection)
 
+5. [Color recognition(Object tracking)](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html)
+
 ####Important
 
 OpenCV docs suggest that a good knowledge of numpy (and matplotlib) is required to write optimized code for OpenCV. Please post Numpy tutorials as well. 
