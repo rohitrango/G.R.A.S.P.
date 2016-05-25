@@ -14,6 +14,8 @@
 
 5. [Color recognition(Object tracking)](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html)
 
+6. [Face recognition](https://github.com/shantnu/FaceDetect/)
+
 ####Important
 
 OpenCV docs suggest that a good knowledge of numpy (and matplotlib) is required to write optimized code for OpenCV. Please post Numpy tutorials as well. 
