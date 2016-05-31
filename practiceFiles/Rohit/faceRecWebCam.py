@@ -6,6 +6,7 @@ cam = cv2.VideoCapture(0)
 print "Press 'q' to exit."
 while True:
 	ret,frame = cam.read()
+	frame = cv2.flip(frame,90)
 	gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 	faces = faceCascade.detectMultiScale(
 		gray,

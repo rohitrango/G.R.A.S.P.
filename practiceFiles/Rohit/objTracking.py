@@ -3,8 +3,8 @@ cam = cv2.VideoCapture(0)
 while(1):
 	ret, frame = cam.read()
 	hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-	lowerPink = np.array([125,50,50])				### HSV value
-	upperPink = np.array([145,255,255])				### HSV value
+	lowerPink = np.array([120,50,50])				### HSV value
+	upperPink = np.array([150,255,255])				### HSV value
 
 	mask = cv2.inRange(hsv,lowerPink,upperPink)
 	res = cv2.bitwise_and(frame, frame, mask=mask)	### mask
