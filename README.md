@@ -15,6 +15,7 @@
 5. [Color recognition(Object tracking)](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html)
 
 6. [Face recognition](https://github.com/shantnu/FaceDetect/)
+7. [List of operations on arrays](http://docs.opencv.org/2.4/modules/core/doc/operations_on_arrays.html#cv.AbsDiff)
 
 ####Important
 
