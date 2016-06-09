@@ -2,6 +2,7 @@ import cv2, numpy as np
 cam = cv2.VideoCapture(0)
 while(1):
 	ret, frame = cam.read()
+	frame = cv2.flip(frame,90)
 	hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 	lowerPink = np.array([120,50,50])				### HSV value
 	upperPink = np.array([150,255,255])				### HSV value
