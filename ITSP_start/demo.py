@@ -15,7 +15,9 @@ green = (0,255,0)
 font = cv2.FONT_HERSHEY_SIMPLEX	
 colorProfile = []								# get color profile of skin
 hsvColors = []
-
+#<<<<
+mask2=np.zeros((480,680),dtype=np.uint8)
+#>>>>
 i = 0
 while i<50:										# give time to place his hand
 
@@ -40,6 +42,13 @@ while i<50:										# give time to place his hand
 
 	i+=1
 
+#<<<	
+#pyrFrame = cv2.pyrDown(frame)
+#pyrFrame = cv2.resize(pyrFrame,None,fx=2, fy=2, interpolation = cv2.INTER_CUBIC)
+#back = cv2.blur(pyrFrame,(5,5))
+back=frame.copy()
+#>>>>
+
 for k in colorProfile:
 	hsvConvert(k)
 # print hsvColors
@@ -53,6 +62,18 @@ while(True):
 	pyrFrame = cv2.pyrDown(frame)
 	pyrFrame = cv2.resize(pyrFrame,None,fx=2, fy=2, interpolation = cv2.INTER_CUBIC)
 	blurred = cv2.blur(pyrFrame,(5,5))
+
+	#<<<<
+	mask2=np.zeros((480,680),dtype=np.uint8)
+	i=i+1
+	if(i%5==0):
+		back=cv2.addWeighted(back,0.9,frame,0.1,0)
+	diff=cv2.absdiff(back,frame)
+	diff=cv2.cvtColor(diff,cv2.COLOR_BGR2GRAY)
+	diffsq=np.power(diff,2)
+	mask2[diffsq>150]=255
+	cv2.imshow('mask2',mask2)
+	#>>>>
 
 	# hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 	# lowerPink = np.array([120,50,50])				### HSV value
@@ -74,13 +95,14 @@ while(True):
 		res = cv2.bitwise_and(blurred,blurred,mask=mask)
 		cv2.imshow(str(temp),res)
 		temp+=1
+	print type(hsvColor)
 
 
 	cv2.imshow('blurred', blurred)
 	cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
 
-	k = cv2.waitKey(1)
+	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
 		break
 
