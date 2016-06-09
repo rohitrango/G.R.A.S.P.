@@ -86,13 +86,18 @@ while(True):
 	# cv2.imshow('res', res)
 
 	temp = 0
-	for hsvColor in hsvColors:
+	for hsvColor in hsvColors: 	
 		myBlur = cv2.cvtColor(blurred,cv2.COLOR_BGR2HSV)
 		h = hsvColor[0][0][0]
 		lowerCol = np.array([h-10,50,50])
 		upperCol = np.array([h+10,255,255])
 		mask = cv2.inRange(myBlur,lowerCol,upperCol)
 		res = cv2.bitwise_and(blurred,blurred,mask=mask)
+		if(temp==0):
+			mask3=res.copy()
+		else:
+			pts=[mask3==0]
+			mask3[pts]=res[pts]
 		cv2.imshow(str(temp),res)
 		temp+=1
 	print type(hsvColor)
@@ -101,7 +106,7 @@ while(True):
 	cv2.imshow('blurred', blurred)
 	cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
-
+	cv2.imshow('mask3',mask3)
 	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
 		break
