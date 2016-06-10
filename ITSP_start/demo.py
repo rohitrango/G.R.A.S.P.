@@ -106,7 +106,7 @@ while(True):
 			mask3[pts]=res[pts]
 		cv2.imshow(str(temp),res)
 		temp+=1
-	# print type(hsvColor)
+
 	mask4 = cv2.medianBlur(mask3,7)
 	mask3 = cv2.medianBlur(mask3,5)
 	mask3 = cv2.Canny(mask3,100,200)
@@ -122,17 +122,30 @@ while(True):
 			if(cv2.arcLength(c,True)>cv2.arcLength(biggestCountour,True)):
 				biggestCountour = c
 	# we found the biggest contour, time to find convexity defects
-	hull = cv2.convexHull(biggestCountour)
+	if(biggestCountour!=None):
+		hull = cv2.convexHull(biggestCountour, returnPoints=False)
+		approx = cv2.approxPolyDP(biggestCountour,18,True)
+		defects = cv2.convexityDefects(biggestCountour,hull)
 
-	# epsilon = 0.1*cv2.arcLength(biggestCountour,True)
-	approx = cv2.approxPolyDP(biggestCountour,18,True)
+		if(defects.shape):
+			for i in range(defects.shape[0]):
+			    s,e,f,d = defects[i,0]
+			    start = tuple(biggestCountour[s][0])
+			    end = tuple(biggestCountour[e][0])
+			    far = tuple(biggestCountour[f][0])
+			    cv2.line(frame,start,end,green,2)
+			    cv2.circle(frame,far,5,red,-1)
 
-	x,y,w,h = cv2.boundingRect(biggestCountour)
-	cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
 
-	cv2.drawContours(frame,[biggestCountour],-1,green,3)
-	cv2.drawContours(frame,approx,-1,red,5)
+		# epsilon = 0.1*cv2.arcLength(biggestCountour,True)
+
+		x,y,w,h = cv2.boundingRect(biggestCountour)
+		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
+
+	# cv2.drawContours(frame,[biggestCountour],-1,green,3)
+	# cv2.drawContours(frame,approx,-1,red,5)
 	# cv2.drawContours(frame,hull,-1,blue,5)
+	
 	# M = cv2.moments(biggestCountour)
 	# if(M['m00']):
 	# 	cx = int(M['m10']/M['m00'])
