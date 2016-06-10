@@ -72,7 +72,7 @@ while(True):
 	diff=cv2.cvtColor(diff,cv2.COLOR_BGR2GRAY)
 	diffsq=np.power(diff,2)
 	mask2[diffsq>150]=255
-	cv2.imshow('mask2',mask2)
+	# cv2.imshow('mask2',mask2)
 	#>>>>
 
 	# hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
@@ -93,6 +93,9 @@ while(True):
 		upperCol = np.array([h+10,255,255])
 		mask = cv2.inRange(myBlur,lowerCol,upperCol)
 		res = cv2.bitwise_and(blurred,blurred,mask=mask)
+		res = cv2.cvtColor(res,cv2.COLOR_HSV2BGR)
+		res = cv2.cvtColor(res,cv2.COLOR_BGR2GRAY)
+		_, res = cv2.threshold(res,20,255,cv2.THRESH_BINARY)
 		if(temp==0):
 			mask3=res.copy()
 		else:
@@ -100,9 +103,11 @@ while(True):
 			mask3[pts]=res[pts]
 		cv2.imshow(str(temp),res)
 		temp+=1
-	print type(hsvColor)
+	# print type(hsvColor)
+	mask4 = cv2.medianBlur(mask3,7)
+	mask3 = cv2.medianBlur(mask3,5)
 
-
+	cv2.imshow('mask4', mask4)
 	cv2.imshow('blurred', blurred)
 	cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
