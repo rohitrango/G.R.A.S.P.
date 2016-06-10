@@ -12,6 +12,8 @@ cam = cv2.VideoCapture(0)
 points = [{"x":100,"y":100},{"x":120, "y":120}, {"x":110 , "y":90},{"x":100,"y":130},{"x":130, "y":150}]
 rectDim = {"width":10,"height":15}
 green = (0,255,0)
+red = (0,0,255)
+blue = (255,0,0)
 font = cv2.FONT_HERSHEY_SIMPLEX	
 colorProfile = []								# get color profile of skin
 hsvColors = []
@@ -58,20 +60,21 @@ cv2.destroyAllWindows()
 
 while(True):
 	ret, frame = cam.read()
+	# frame = frame[240:480,0:320]				# as of now, we work on only few parts
 	frame = cv2.flip(frame,90)
 	pyrFrame = cv2.pyrDown(frame)
 	pyrFrame = cv2.resize(pyrFrame,None,fx=2, fy=2, interpolation = cv2.INTER_CUBIC)
 	blurred = cv2.blur(pyrFrame,(5,5))
 
 	#<<<<
-	mask2=np.zeros((480,680),dtype=np.uint8)
-	i=i+1
-	if(i%5==0):
-		back=cv2.addWeighted(back,0.9,frame,0.1,0)
-	diff=cv2.absdiff(back,frame)
-	diff=cv2.cvtColor(diff,cv2.COLOR_BGR2GRAY)
-	diffsq=np.power(diff,2)
-	mask2[diffsq>150]=255
+	# mask2=np.zeros((480,680),dtype=np.uint8)
+	# i=i+1
+	# if(i%5==0):
+	# 	back=cv2.addWeighted(back,0.9,frame,0.1,0)
+	# diff=cv2.absdiff(back,frame)
+	# diff=cv2.cvtColor(diff,cv2.COLOR_BGR2GRAY)
+	# diffsq=np.power(diff,2)
+	# mask2[diffsq>150]=255
 	# cv2.imshow('mask2',mask2)
 	#>>>>
 
@@ -108,9 +111,36 @@ while(True):
 	mask3 = cv2.medianBlur(mask3,5)
 	mask3 = cv2.Canny(mask3,100,200)
 	copymask3 = mask3.copy()
-	contours, hierarchy = cv2.findContours(copymask3, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
-	cv2.drawContours(frame,contours,-1,green,2)
+	contours, hierarchy = cv2.findContours(copymask3, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+	# we have the contours, time for the biggest one
+	biggestCountour = None
+	for c in contours:
+		if biggestCountour == None:
+			biggestCountour = c
+		else:
+			# if(cv2.contourArea(c)>cv2.contourArea(biggestCountour)):
+			if(cv2.arcLength(c,True)>cv2.arcLength(biggestCountour,True)):
+				biggestCountour = c
+	# we found the biggest contour, time to find convexity defects
+	hull = cv2.convexHull(biggestCountour)
 
+	# epsilon = 0.1*cv2.arcLength(biggestCountour,True)
+	approx = cv2.approxPolyDP(biggestCountour,18,True)
+
+	x,y,w,h = cv2.boundingRect(biggestCountour)
+	cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
+
+	cv2.drawContours(frame,[biggestCountour],-1,green,3)
+	cv2.drawContours(frame,approx,-1,red,5)
+	# cv2.drawContours(frame,hull,-1,blue,5)
+	# M = cv2.moments(biggestCountour)
+	# if(M['m00']):
+	# 	cx = int(M['m10']/M['m00'])
+	# 	cy = int(M['m01']/M['m00'])
+	# else:
+	# 	cx = cy = 0
+	# cv2.circle(frame,(cx,cy),5,red,3)
+	# print contours[0]
 	cv2.imshow('copymask3' , copymask3)
 	cv2.imshow('mask4', mask4)
 	cv2.imshow('blurred', blurred)
