@@ -9,7 +9,7 @@ def hsvConvert(rgb):
 
 cam = cv2.VideoCapture(0)
 
-points = [{"x":100,"y":100},{"x":120, "y":120}, {"x":110 , "y":230}]
+points = [{"x":100,"y":100},{"x":120, "y":120}, {"x":110 , "y":90},{"x":100,"y":130},{"x":130, "y":150}]
 rectDim = {"width":10,"height":15}
 green = (0,255,0)
 font = cv2.FONT_HERSHEY_SIMPLEX	
@@ -89,8 +89,8 @@ while(True):
 	for hsvColor in hsvColors: 	
 		myBlur = cv2.cvtColor(blurred,cv2.COLOR_BGR2HSV)
 		h = hsvColor[0][0][0]
-		lowerCol = np.array([h-10,50,50])
-		upperCol = np.array([h+10,255,255])
+		lowerCol = np.array([h-7,45,45])
+		upperCol = np.array([h+8,255,255])
 		mask = cv2.inRange(myBlur,lowerCol,upperCol)
 		res = cv2.bitwise_and(blurred,blurred,mask=mask)
 		res = cv2.cvtColor(res,cv2.COLOR_HSV2BGR)
@@ -106,7 +106,12 @@ while(True):
 	# print type(hsvColor)
 	mask4 = cv2.medianBlur(mask3,7)
 	mask3 = cv2.medianBlur(mask3,5)
+	mask3 = cv2.Canny(mask3,100,200)
+	copymask3 = mask3.copy()
+	contours, hierarchy = cv2.findContours(copymask3, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_L1)
+	cv2.drawContours(frame,contours,-1,green,2)
 
+	cv2.imshow('copymask3' , copymask3)
 	cv2.imshow('mask4', mask4)
 	cv2.imshow('blurred', blurred)
 	cv2.imshow("pyrFrame",pyrFrame)
