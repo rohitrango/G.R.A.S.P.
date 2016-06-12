@@ -1,5 +1,5 @@
 import cv2
-import numpy as np 
+import numpy as np
 from time import sleep
 
 def hsvConvert(rgb):
@@ -9,12 +9,12 @@ def hsvConvert(rgb):
 
 cam = cv2.VideoCapture(0)
 
-points = [{"x":100,"y":100},{"x":120, "y":120}, {"x":110 , "y":90},{"x":100,"y":130},{"x":130, "y":150}]
+points = [{"x":300,"y":100},{"x":280, "y":120}, {"x":310 , "y":90},{"x":300,"y":130},{"x":290, "y":150}]
 rectDim = {"width":10,"height":15}
 green = (0,255,0)
 red = (0,0,255)
 blue = (255,0,0)
-font = cv2.FONT_HERSHEY_SIMPLEX	
+font = cv2.FONT_HERSHEY_SIMPLEX
 colorProfile = []								# get color profile of skin
 hsvColors = []
 #<<<<
@@ -28,7 +28,7 @@ while i<50:										# give time to place his hand
 	for point in points:
 		f = frame[point["x"]+rectDim["width"]/2,point["y"] + rectDim["height"]/2]
 		textString = str(f[0]) + " " + str(f[1])+" " + str(f[2])
-		cv2.putText(frame,textString, (point["x"],point["y"]), font, 0.5, (0,255,0),2)
+		# cv2.putText(frame,textString, (point["x"],point["y"]), font, 0.5, (0,255,0),2)
 		cv2.rectangle(frame,(point["x"],point["y"]),(point["x"]+rectDim["width"],point["y"]+rectDim["height"]),green,2)
 	cv2.imshow('Place your palm within the ROI',frame)
 
@@ -44,7 +44,7 @@ while i<50:										# give time to place his hand
 
 	i+=1
 
-#<<<	
+#<<<
 #pyrFrame = cv2.pyrDown(frame)
 #pyrFrame = cv2.resize(pyrFrame,None,fx=2, fy=2, interpolation = cv2.INTER_CUBIC)
 #back = cv2.blur(pyrFrame,(5,5))
@@ -89,7 +89,7 @@ while(True):
 	# cv2.imshow('res', res)
 
 	temp = 0
-	for hsvColor in hsvColors: 	
+	for hsvColor in hsvColors:
 		myBlur = cv2.cvtColor(blurred,cv2.COLOR_BGR2HSV)
 		h = hsvColor[0][0][0]
 		lowerCol = np.array([h-7,45,45])
@@ -126,14 +126,19 @@ while(True):
 		hull = cv2.convexHull(biggestCountour, returnPoints=False)
 		approx = cv2.approxPolyDP(biggestCountour,18,True)
 		defects = cv2.convexityDefects(biggestCountour,hull)
+		# we have the defects, time to remove redundant ones
 
-		if(defects.shape):
+		# removed redundant defects (not yet :P)
+		# print defects.shape
+
+		if(defects!=None):
 			for i in range(defects.shape[0]):
 			    s,e,f,d = defects[i,0]
 			    start = tuple(biggestCountour[s][0])
 			    end = tuple(biggestCountour[e][0])
 			    far = tuple(biggestCountour[f][0])
 			    cv2.line(frame,start,end,green,2)
+			    cv2.circle(frame,start,5,blue,-1)
 			    cv2.circle(frame,far,5,red,-1)
 
 
@@ -145,7 +150,7 @@ while(True):
 	# cv2.drawContours(frame,[biggestCountour],-1,green,3)
 	# cv2.drawContours(frame,approx,-1,red,5)
 	# cv2.drawContours(frame,hull,-1,blue,5)
-	
+
 	# M = cv2.moments(biggestCountour)
 	# if(M['m00']):
 	# 	cx = int(M['m10']/M['m00'])
