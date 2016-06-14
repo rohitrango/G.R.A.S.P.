@@ -115,7 +115,11 @@ while(True):
 		cv2.rectangle(finalColor,(x,y),(x+w,y+h),blue,2)
 		hull = cv2.convexHull(biggestC, returnPoints=False)
 		approx = cv2.approxPolyDP(biggestC,18,True)
-		defects = cv2.convexityDefects(biggestC,hull)
+		try:
+			defects = cv2.convexityDefects(biggestCountour,hull)
+		except:
+			print "caught error!"
+			print biggestContour
 		newdefects = []
 		
 		if(defects!=None):
