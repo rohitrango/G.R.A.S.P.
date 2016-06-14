@@ -1,0 +1,17 @@
+i have added functions: findindex(),combineindices(),combineindices2(),findlines()
+first 2 are of no use, made them but while running, they were causing a lot of lag.
+in 3rd funtion,
+	it tries to find contour from both sides of hand
+	and then, in the 4th function,
+	it tries to see hand as a set of 3 vertical lines, one-from wrist to one side of thumb,
+ 	other which is contour of other side of hand, 3rd-consisting of contours of our 4 fingers
+	last 2 make up other side of hand while first is one side of hand
+	differentiation between one side of hand and other side of hand is done using standard deviation
+	we have to see which value works.
+	line1, line2, line 3 are mean x coordinates of these lines.
+	flag determines whether hand is left facing or right facing
+	then, this is added to history which keeps track of how much hand has moved till now	
+	and then checking if standard deviation is small in currindex==5, to see if there is no motion
+	 there will be a similar check for 10 and 15
+	at 18, we are going to look if side of hand has changed, i.e. whether it was at first left facing and is now right facing
+	at 18 i am thinking of also adding covariance check to see if it is really a gesture or some haphazard hand movement.
