@@ -55,7 +55,8 @@ def combineindices2():
 	minindex=np.argmax(canny,0)
 	tempframe=cv2.flip(canny,90)
 	maxindex=np.argmax(tempframe,0)
-	maxindex=-1*maxindex+w
+	maxindex=-1*maxindex+w+x
+	minindex=minindex+x
 def findlines():
 	if (np.std(minindex)<std1):
 		flag=1
