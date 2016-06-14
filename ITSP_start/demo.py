@@ -57,7 +57,7 @@ for k in colorProfile:
 
 cv2.destroyAllWindows()
 
-
+duration=4
 while(True):
 	ret, frame = cam.read()
 	# frame = frame[240:480,0:320]				# as of now, we work on only few parts
@@ -106,7 +106,7 @@ while(True):
 			mask3[pts]=res[pts]
 		cv2.imshow(str(temp),res)
 		temp+=1
-
+	finalmask=mask3.copy()
 	mask4 = cv2.medianBlur(mask3,7)
 	mask3 = cv2.medianBlur(mask3,5)
 	mask3 = cv2.Canny(mask3,100,200)
@@ -146,7 +146,7 @@ while(True):
 
 		x,y,w,h = cv2.boundingRect(biggestCountour)
 		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
-
+		
 	# cv2.drawContours(frame,[biggestCountour],-1,green,3)
 	# cv2.drawContours(frame,approx,-1,red,5)
 	# cv2.drawContours(frame,hull,-1,blue,5)
@@ -165,9 +165,15 @@ while(True):
 	cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
 	cv2.imshow('mask3',mask3)
+	cv2.imshow('finalmask',finalmask)
 	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
 		break
+	i+=1
+	if(i%duration==0):
+		pts=[mask3!=0]
 
+
+print pts
 cam.release()
 cv2.destroyAllWindows()
