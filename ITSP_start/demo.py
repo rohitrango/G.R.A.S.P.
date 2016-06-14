@@ -66,7 +66,7 @@ while(True):
 	for hsvColor in hsvColors:
 		myBlur = cv2.cvtColor(blurred,cv2.COLOR_BGR2HSV)
 		h = hsvColor[0][0][0]
-		lowerCol = np.array([h-10,55,55])
+		lowerCol = np.array([h-10,100,100])
 		upperCol = np.array([h+10,255,255])
 		mask = cv2.inRange(myBlur,lowerCol,upperCol)
 		res = cv2.bitwise_and(blurred,blurred,mask=mask)
@@ -83,6 +83,7 @@ while(True):
 
 	mask4 = cv2.medianBlur(mask3,7)
 	mask3 = cv2.medianBlur(mask3,5)
+	erodeMask = mask3.copy()
 	mask3 = cv2.Canny(mask3,100,200)
 	copymask3 = mask3.copy()
 	contours, hierarchy = cv2.findContours(copymask3, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -112,11 +113,11 @@ while(True):
 			    start = tuple(biggestCountour[s][0])
 			    end = tuple(biggestCountour[e][0])
 			    far = tuple(biggestCountour[f][0])
-			    cv2.line(frame,start,end,green,2)
-			    cv2.circle(frame,start,5,blue,-1)
-			    cv2.circle(frame,far,5,red,-1)
+			    # cv2.line(frame,start,end,green,2)
+			    # cv2.circle(frame,start,5,blue,-1)
+			    # cv2.circle(frame,far,5,red,-1)
 
-			    if (min(P2P(start,far),P2P(end,far)) >= 0.1*h) and (angle(start,far,end)<=80.0*math.pi/180):
+			    if (min(P2P(start,far),P2P(end,far)) >= 0.3*h) and (angle(start,far,end)<=80.0*math.pi/180):
 			    	newdefects.append([start,end,far])
 			    else:
 			    	newdefects.append([start,end,-1])
@@ -171,6 +172,10 @@ while(True):
 	# 	cx = cy = 0
 	# cv2.circle(frame,(cx,cy),5,red,3)
 	# print contours[0]
+	anotherKernel = np.ones((9,9),np.uint8)
+	erodeFinger = cv2.erode(erodeMask,anotherKernel,iterations=2)
+
+	cv2.imshow('erodeFinger',erodeFinger)
 	cv2.imshow('copymask3' , copymask3)
 	cv2.imshow('mask4', mask4)
 	cv2.imshow('blurred', blurred)
