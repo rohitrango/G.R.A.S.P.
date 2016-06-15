@@ -12,13 +12,20 @@ def hsvConvert(rgb):
 
 cam = cv2.VideoCapture(0)
 newdefects = []
-points = [{"x":300,"y":100},{"x":280, "y":120}, {"x":310 , "y":90},{"x":300,"y":130},{"x":290, "y":150}]
+points = [					#240*320
+	{"x":120,"y":90},
+	{"x":80, "y":140}, 
+	{"x":160 , "y":140},
+	{"x":100,"y":210},
+	{"x":150, "y":210},
+	{"x":120, "y":160}]
+
 rectDim = {"width":10,"height":15}
 green = (0,255,0)
 red = (0,0,255)
 blue = (255,0,0)
 font = cv2.FONT_HERSHEY_SIMPLEX
-colorProfile = []								# get color profile of skin
+# colorProfile = []								# get color profile of skin
 hsvColors = []
 
 mask2=np.zeros((480,680),dtype=np.uint8)
@@ -27,13 +34,16 @@ i = 0
 while i<50:										# give time to place his hand
 
 	ret, frame = cam.read()
+	frame = frame[240:480,0:320]
 	frame = cv2.flip(frame,90)
 	for point in points:
 		f = frame[point["x"]+rectDim["width"]/2,point["y"] + rectDim["height"]/2]
 		textString = str(f[0]) + " " + str(f[1])+" " + str(f[2])
+		cv2.putText(frame,"Put your hand in the green boxes",(10,20),font,0.5,green,2)
 		# cv2.putText(frame,textString, (point["x"],point["y"]), font, 0.5, (0,255,0),2)
 		cv2.rectangle(frame,(point["x"],point["y"]),(point["x"]+rectDim["width"],point["y"]+rectDim["height"]),green,2)
-	cv2.imshow('Place your palm within the ROI',frame)
+	
+	cv2.imshow('Place your palm in the green boxes',frame)
 
 	k = cv2.waitKey(1)
 	if k==ord('q'):
@@ -41,19 +51,19 @@ while i<50:										# give time to place his hand
 
 	if i==49:
 		for point in points:
-			nthColor = frame[point["x"]+rectDim["width"]/2,point["y"] + rectDim["height"]/2]
-			colorProfile.append(nthColor)
-		print colorProfile
+			roi = frame[point["x"]:point["x"]+rectDim["width"] , point["y"]:point["y"]+rectDim["height"]] 
+			roi = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
+			hVal = roi[0:rectDim["width"], 0:rectDim["height"], 0]
+			sVal = roi[0:rectDim["width"], 0:rectDim["height"], 1]
+			vVal = roi[0:rectDim["width"], 0:rectDim["height"], 2]
 
+			h,s,v = np.median(hVal), np.median(sVal), np.median(vVal)
+			hsvColors.append([h,s,v])
 	i+=1
 
 back=frame.copy()
 
-for k in colorProfile:
-	hsvConvert(k)
-
 cv2.destroyAllWindows()
-
 
 while(True):
 	ret, frame = cam.read()
@@ -65,7 +75,8 @@ while(True):
 	temp = 0
 	for hsvColor in hsvColors:
 		myBlur = cv2.cvtColor(blurred,cv2.COLOR_BGR2HSV)
-		h = hsvColor[0][0][0]
+		# h = hsvColor[0][0][0]
+		h = hsvColor[0]
 		lowerCol = np.array([h-10,100,100])
 		upperCol = np.array([h+10,255,255])
 		mask = cv2.inRange(myBlur,lowerCol,upperCol)
