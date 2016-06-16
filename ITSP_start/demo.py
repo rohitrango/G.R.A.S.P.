@@ -89,7 +89,7 @@ while(True):
 		else:
 			pts=[mask3==0]
 			mask3[pts]=res[pts]
-		cv2.imshow(str(temp),res)
+		# cv2.imshow(str(temp),res)
 		temp+=1
 
 	mask4 = cv2.medianBlur(mask3,7)
@@ -98,6 +98,7 @@ while(True):
 	mask3 = cv2.Canny(mask3,100,200)
 	copymask3 = mask3.copy()
 	contours, hierarchy = cv2.findContours(copymask3, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
 	# we have the contours, time for the biggest one
 	biggestCountour = None
 	for i in contours:
@@ -116,9 +117,26 @@ while(True):
 		x,y,w,h = cv2.boundingRect(biggestCountour)
 		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
 
-		# we have the defects, time to remove redundant ones
+		# we need to find the moments
+		M = cv2.moments(biggestCountour)
 
-		# print defects.shape
+		cx = cy = None
+		if(M['m00']):
+			cx = int(M['m10']/M['m00'])
+			cy = int(M['m01']/M['m00'])
+
+			cv2.circle(frame,(cx,cy),10,yellow,2)
+
+			if(gestures.prevPoint==None and gestures.nextPoint==None):	# start
+				gestures.prevPoint = (cx,cy)
+			elif (gestures.nextPoint == None):							# 1st iteration
+				gestures.nextPoint = (cx,cy)
+			else:
+				gestures.prevPoint = gestures.nextPoint
+				gestures.nextPoint = (cx,cy)
+			gestures.recordGesture()	
+
+		# we have the defects, time to remove redundant ones
 		newdefects = []
 
 		if(defects!=None):
@@ -131,10 +149,13 @@ while(True):
 			    # cv2.circle(frame,start,5,blue,-1)
 			    # cv2.circle(frame,far,5,red,-1)
 
-			    if (min(P2P(start,far),P2P(end,far)) >= 0.4*h) and (angle(start,far,end)<=80.0*math.pi/180):
+			    if (min(P2P(start,far),P2P(end,far)) >= 0.25*h) and (angle(start,far,end)<=80.0*math.pi/180):
 			    	newdefects.append([start,end,far])
 			    else:
 			    	newdefects.append([start,end,-1])
+
+# we have found the biggest rectangle. and filtering of defects is done above as well.
+# find the center of contours and track the point 
 
 		if(newdefects!=[]):
 			xcenter,ycenter = 0,0
@@ -152,21 +173,23 @@ while(True):
 					cv2.circle(frame,start,5,blue,-1)
 					cv2.circle(frame,far,5,red,-1)
 
-			if(centerCount>0):				# we have a point to track
+# ''' the gesture tracking on basis of a point '''
 
-				# draw the circle
-				xcenter/=centerCount
-				ycenter/=centerCount
-				cv2.circle(frame,(xcenter,ycenter),10,yellow,2)
+			# if(centerCount>0):				# we have a point to track
 
-				if(gestures.prevPoint==None and gestures.nextPoint==None):	# start
-					gestures.prevPoint = (xcenter,ycenter)
-				elif (gestures.nextPoint == None):							# 1st iteration
-					gestures.nextPoint = (xcenter,ycenter)
-				else:
-					gestures.prevPoint = gestures.nextPoint
-					gestures.nextPoint = (xcenter,ycenter)
-				gestures.recordGesture()
+			# 	# draw the circle
+			# 	xcenter/=centerCount
+			# 	ycenter/=centerCount
+			# 	# cv2.circle(frame,(xcenter,ycenter),10,yellow,2)
+
+			# 	if(gestures.prevPoint==None and gestures.nextPoint==None):	# start
+			# 		gestures.prevPoint = (xcenter,ycenter)
+			# 	elif (gestures.nextPoint == None):							# 1st iteration
+			# 		gestures.nextPoint = (xcenter,ycenter)
+			# 	else:
+			# 		gestures.prevPoint = gestures.nextPoint
+			# 		gestures.nextPoint = (xcenter,ycenter)
+			# 	gestures.recordGesture()
 
 
 		# epsilon = 0.1*cv2.arcLength(biggestCountour,True)
@@ -187,13 +210,13 @@ while(True):
 	anotherKernel = np.ones((9,9),np.uint8)
 	erodeFinger = cv2.erode(erodeMask,anotherKernel,iterations=2)
 
-	cv2.imshow('erodeFinger',erodeFinger)
-	cv2.imshow('copymask3' , copymask3)
-	cv2.imshow('mask4', mask4)
-	cv2.imshow('blurred', blurred)
-	cv2.imshow("pyrFrame",pyrFrame)
+	# cv2.imshow('erodeFinger',erodeFinger)
+	# cv2.imshow('copymask3' , copymask3)
+	# cv2.imshow('mask4', mask4)
+	# cv2.imshow('blurred', blurred)
+	# cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
-	cv2.imshow('mask3',mask3)
+	# cv2.imshow('mask3',mask3)
 	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
 		break
