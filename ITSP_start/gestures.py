@@ -15,11 +15,11 @@ theta = pi/8
 def recordGesture():
 	global ctr
 	if mode=="track":
-		if(functions.P2P(prevPoint,nextPoint)>90):
-			xdist = fabs(nextPoint[0]-prevPoint[0])
-			ydist = fabs(nextPoint[1]-prevPoint[1])
+		if(functions.P2P(prevPoint,nextPoint)>100):
+			xdist = (nextPoint[0]-prevPoint[0])
+			ydist = (nextPoint[1]-prevPoint[1])
 
-			angle = atan2(-ydist,xdist) 
+			angle = atan2(-ydist,xdist) 				# since in image, y axis is inverted
 			print angle,"\n\n\n"
 
 			if (angle>=-theta and angle<theta):
