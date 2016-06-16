@@ -62,8 +62,8 @@ while i<50:										# give time to place his hand
 	i+=1
 
 back=frame.copy()
-
 cv2.destroyAllWindows()
+print "Entering Idle Mode. Press 't' for track mode, 'i' for idle mode, 'q' to quit."
 
 while(True):
 	ret, frame = cam.read()
@@ -219,7 +219,12 @@ while(True):
 	# cv2.imshow('mask3',mask3)
 	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
+		print "Exiting program. Thanks for using!"
 		break
+	elif k==ord('t'):		# track mode
+		gestures.changeGestureMode("track")
+	elif k==ord('i'):		# idle mode
+		gestures.changeGestureMode("idle")
 
 cam.release()
 cv2.destroyAllWindows()

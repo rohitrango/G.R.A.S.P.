@@ -3,7 +3,7 @@ from math import fabs,atan2,pi
 prevPoint = None
 nextPoint = None
 ctr = 1
-mode = "track"			# we can have 'track', 'add', 'delete' and 'stop' modes  
+mode = "idle"			# we can have 'track', 'add', 'delete' and 'stop' modes  
 trackGesture = []
 addGesture = []
 deleteGesture = []
@@ -14,7 +14,9 @@ theta = pi/8
 
 def recordGesture():
 	global ctr
-	if mode=="track":
+	if mode=="idle":
+		pass
+	elif mode=="track":
 		if(functions.P2P(prevPoint,nextPoint)>100):
 			xdist = (nextPoint[0]-prevPoint[0])
 			ydist = (nextPoint[1]-prevPoint[1])
@@ -45,9 +47,7 @@ def recordGesture():
 def changeGestureMode(customMode):
 	global mode
 	mode = customMode
-
-
-
+	print "Entered %s mode."%customMode
 # if(prevPoint!=None and nextPoint!=None):
 # 		# find the rel positions
 # 		if(functions.P2P(prevPoint,nextPoint)>90):
