@@ -1,8 +1,8 @@
-north
-south 
-west 
-east
 north-west
+north
 north-east
-south-west
+east
 south-east
+south
+south-west
+west

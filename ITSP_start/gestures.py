@@ -37,6 +37,10 @@ def StopRecording():
 			call(['firefox'])
 			refreshHistory()
 			changeGestureMode("idle")
+def readfile():
+	file=open('check','r')
+
+
 
 def recordGesture():
 	global ctr,addGesture,trackGesture,deleteGesture,prevGesture
@@ -65,29 +69,29 @@ def recordGesture():
 
 			elif (angle>=theta and angle< 3*theta):
 				# trackGesture.append(2)
-				if(prevGesture!=6):
+				if(prevGesture!=3):
 					print "North east"
-					trackGesture.append(6)
-					prevGesture=6
+					trackGesture.append(3)
+					prevGesture=3
 
 			elif (angle>=3*theta and angle<5*theta):
 				# trackGesture.append(3)
-				if(prevGesture!=1):
-					trackGesture.append(1)
+				if(prevGesture!=2):
+					trackGesture.append(2)
 					print "North"
-					prevGesture=1
+					prevGesture=2
 
 			elif (angle>=5*theta and angle<7*theta):
-				if(prevGesture!=5):
+				if(prevGesture!=1):
 					print "North west"
-					trackGesture.append(5)
-					prevGesture=5
+					trackGesture.append(1)
+					prevGesture=1
 
 			elif (angle>=7*theta or angle<=-7*theta):
-				if(prevGesture!=3):
+				if(prevGesture!=8):
 					print "West"
-					trackGesture.append(3)
-					prevGesture=3
+					trackGesture.append(8)
+					prevGesture=8
 
 			elif (angle>-7*theta and angle<=-5*theta):
 				if(prevGesture!=7):
@@ -96,16 +100,16 @@ def recordGesture():
 					prevGesture=7
 
 			elif (angle>-5*theta and angle<=-3*theta):
-				if(prevGesture!=2):
+				if(prevGesture!=6):
 					print "South"
-					trackGesture.append(2)
-					prevGesture=2
+					trackGesture.append(6)
+					prevGesture=6
 
 			elif (angle>-3*theta and angle<=-theta):
-				if(prevGesture!=8):
+				if(prevGesture!=5):
 					print "South East"
-					trackGesture.append(8)
-					prevGesture=8
+					trackGesture.append(5)
+					prevGesture=5
 	
 def changeGestureMode(customMode):
 	global mode
