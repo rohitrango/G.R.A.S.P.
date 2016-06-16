@@ -90,10 +90,10 @@ while(True):
 					gestures.prevPoint = (xcenter,ycenter)
 				elif (gestures.nextPoint == None):							# 1st iteration
 					gestures.nextPoint = (xcenter,ycenter)
-				else:
+				else:		
 					gestures.prevPoint = gestures.nextPoint
 					gestures.nextPoint = (xcenter,ycenter)
-				gestures.recordGesture()
+					gestures.recordGesture()
 
 
 

@@ -121,10 +121,10 @@ while(True):
 		M = cv2.moments(biggestCountour)
 
 		cx = cy = None
-		if(M['m00']):
+		if(M['m00']!=0):
 			cx = int(M['m10']/M['m00'])
 			cy = int(M['m01']/M['m00'])
-
+			# print cx,cy , "\n\n\n\n"
 			cv2.circle(frame,(cx,cy),10,yellow,2)
 
 			if(gestures.prevPoint==None and gestures.nextPoint==None):	# start
@@ -134,7 +134,7 @@ while(True):
 			else:
 				gestures.prevPoint = gestures.nextPoint
 				gestures.nextPoint = (cx,cy)
-			gestures.recordGesture()	
+				gestures.recordGesture()	
 
 		# we have the defects, time to remove redundant ones
 		newdefects = []
