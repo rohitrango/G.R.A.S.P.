@@ -47,7 +47,10 @@ while(True):
 		x,y,w,h = cv2.boundingRect(biggestC)
 		cv2.rectangle(finalColor,(x,y),(x+w,y+h),blue,2)
 		
-		hull = cv2.convexHull(biggestC, returnPoints=False)
+		try:
+			hull = cv2.convexHull(biggestC, returnPoints=False)
+		except:
+			print "No Hull"
 		approx = cv2.approxPolyDP(biggestC,18,True)
 		defects = cv2.convexityDefects(biggestC,hull)
 		newdefects = []

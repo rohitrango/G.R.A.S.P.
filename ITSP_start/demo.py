@@ -31,7 +31,8 @@ hsvColors = []
 mask2=np.zeros((480,680),dtype=np.uint8)
 
 i = 0
-while i<50:										# give time to place his hand
+N=100
+while i<N:										# give time to place his hand
 
 	ret, frame = cam.read()
 	frame = frame[240:480,0:320]
@@ -47,9 +48,9 @@ while i<50:										# give time to place his hand
 
 	k = cv2.waitKey(1)
 	if k==ord('q'):
-		i = 49
+		i = N-1
 
-	if i==49:
+	if i==N-1:
 		for point in points:
 			roi = frame[point["x"]:point["x"]+rectDim["width"] , point["y"]:point["y"]+rectDim["height"]] 
 			roi = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
@@ -110,7 +111,10 @@ while(True):
 
 	# we found the biggest contour, time to find convexity defects
 	if(biggestCountour!=None):
-		hull = cv2.convexHull(biggestCountour, returnPoints=False)
+		try:
+			hull = cv2.convexHull(biggestCountour, returnPoints=False)
+		except:
+			print "No Hull"
 		approx = cv2.approxPolyDP(biggestCountour,18,True)
 		defects = cv2.convexityDefects(biggestCountour,hull)
 
