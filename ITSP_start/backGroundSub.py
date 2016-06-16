@@ -17,7 +17,12 @@ while(True):
 	eroded = cv2.erode(fgmask,kernel,iterations=1)
 
 	fgmask = cv2.medianBlur(eroded,7)
-	ret, final = cv2.threshold(fgmask,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+	ret, final = cv2.threshold(fgmask,0,255,cv2.THRESH_BINARY)		#+cv2.THRESH_OTSU
+	
+	if np.sum(final>150) > np.sum(final<150):		# negating the colors in case of problems
+		final = 255-final
+
+
 
 	contours, hierarchy = cv2.findContours(final.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 	
@@ -26,12 +31,18 @@ while(True):
 	else:
 		biggestC=None
 
+
 	if biggestC!=None:
 		#------------------------------------
+		# for i in contours:
+		# 	if cv2.contourArea(i)!=cv2.contourArea(biggestC):
+		# 		cv2.drawContours(final,[i],0,(0,0,0),-1)
+
 		M = cv2.moments(biggestC)
 		center = None
 		if(M['m00']):
 			center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+			cv2.circle(finalColor,center,10,yellow,2)
 
 		x,y,w,h = cv2.boundingRect(biggestC)
 		cv2.rectangle(finalColor,(x,y),(x+w,y+h),blue,2)
@@ -47,7 +58,7 @@ while(True):
 				start = tuple(biggestC[s][0])
 				end = tuple(biggestC[e][0])
 				far = tuple(biggestC[f][0])
-				if (min(P2P(start,far),P2P(end,far)) >= 0.1*h) and (angle(start,far,end)<=80.0*math.pi/180):
+				if (min(P2P(start,far),P2P(end,far)) >= 0.1*h) and (angle(start,far,end)<=80.0*math.pi/180 and far[1]<=int(y+h/2)):
 					newdefects.append([start,end,far])
 				else:
 					newdefects.append([start,end,-1])
@@ -73,7 +84,7 @@ while(True):
 				# draw the circle
 				xcenter/=centerCount
 				ycenter/=centerCount
-				cv2.circle(finalColor,(xcenter,ycenter),10,yellow,2)
+				# cv2.circle(finalColor,(xcenter,ycenter),10,yellow,2)
 
 				if(gestures.prevPoint==None and gestures.nextPoint==None):	# start
 					gestures.prevPoint = (xcenter,ycenter)

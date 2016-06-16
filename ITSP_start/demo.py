@@ -112,9 +112,12 @@ while(True):
 		hull = cv2.convexHull(biggestCountour, returnPoints=False)
 		approx = cv2.approxPolyDP(biggestCountour,18,True)
 		defects = cv2.convexityDefects(biggestCountour,hull)
+
+		x,y,w,h = cv2.boundingRect(biggestCountour)
+		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
+
 		# we have the defects, time to remove redundant ones
 
-		# removed redundant defects (not yet :P)
 		# print defects.shape
 		newdefects = []
 
@@ -128,7 +131,7 @@ while(True):
 			    # cv2.circle(frame,start,5,blue,-1)
 			    # cv2.circle(frame,far,5,red,-1)
 
-			    if (min(P2P(start,far),P2P(end,far)) >= 0.3*h) and (angle(start,far,end)<=80.0*math.pi/180):
+			    if (min(P2P(start,far),P2P(end,far)) >= 0.4*h) and (angle(start,far,end)<=80.0*math.pi/180):
 			    	newdefects.append([start,end,far])
 			    else:
 			    	newdefects.append([start,end,-1])
@@ -168,9 +171,7 @@ while(True):
 
 		# epsilon = 0.1*cv2.arcLength(biggestCountour,True)
 
-		x,y,w,h = cv2.boundingRect(biggestCountour)
-		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
-
+		
 	# cv2.drawContours(frame,[biggestCountour],-1,green,3)
 	# cv2.drawContours(frame,approx,-1,red,5)
 	# cv2.drawContours(frame,hull,-1,blue,5)
