@@ -27,6 +27,7 @@ blue = (255,0,0)
 font = cv2.FONT_HERSHEY_SIMPLEX
 # colorProfile = []								# get color profile of skin
 hsvColors = []
+noOfDefects = 0
 
 mask2=np.zeros((480,680),dtype=np.uint8)
 
@@ -99,7 +100,7 @@ while(True):
 	mask3 = cv2.Canny(mask3,100,200)
 	copymask3 = mask3.copy()
 	contours, hierarchy = cv2.findContours(copymask3, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-
+	noOfDefects = 0
 	# we have the contours, time for the biggest one
 	biggestCountour = None
 	for i in contours:
@@ -155,11 +156,16 @@ while(True):
 
 			    if (min(P2P(start,far),P2P(end,far)) >= 0.25*h) and (angle(start,far,end)<=80.0*math.pi/180):
 			    	newdefects.append([start,end,far])
+			    	noOfDefects+=1
 			    else:
 			    	newdefects.append([start,end,-1])
 
 # we have found the biggest rectangle. and filtering of defects is done above as well.
 # find the center of contours and track the point 
+# stop the gesture if no defects found, <basically fist mode> :P
+		if(noOfDefects==0):
+			gestures.StopRecording()
+			next 
 
 		if(newdefects!=[]):
 			xcenter,ycenter = 0,0
@@ -215,12 +221,13 @@ while(True):
 	erodeFinger = cv2.erode(erodeMask,anotherKernel,iterations=2)
 
 	# cv2.imshow('erodeFinger',erodeFinger)
-	# cv2.imshow('copymask3' , copymask3)
-	# cv2.imshow('mask4', mask4)
-	# cv2.imshow('blurred', blurred)
-	# cv2.imshow("pyrFrame",pyrFrame)
+	cv2.imshow('copymask3' , copymask3)
+	cv2.imshow('mask4', mask4)
+	cv2.imshow('blurred', blurred)
+	cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
-	# cv2.imshow('mask3',mask3)
+	cv2.imshow('mask3',mask3)
+
 	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
 		print "Exiting program. Thanks for using!"
