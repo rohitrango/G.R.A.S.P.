@@ -5,6 +5,7 @@ import gestures
 
 cam = cv2.VideoCapture(0)
 fgbg = cv2.BackgroundSubtractorMOG2()
+hand_cascade=cv2.CascadeClassifier('palm2.xml')
 
 while(True):
 	ret, frame = cam.read()
@@ -66,6 +67,10 @@ while(True):
 				else:
 					newdefects.append([start,end,-1])
 
+		hands = hand_cascade.detectMultiScale(frame, 1.3, 5)
+		for (x,y,w,h) in hands:
+			cv2.rectangle(finalColor,(x,y),(x+w,y+h),(0,0,0),2)
+
 		if(newdefects!=[]):
 			xcenter,ycenter = 0,0
 			centerCount=0
@@ -109,7 +114,7 @@ while(True):
 	cv2.imshow('eroded', eroded)
 	cv2.imshow('final', final)
 
-	k = cv2.waitKey(1)
+	k = cv2.waitKey(1) & 0xff
 	if k==ord('q'):
 		break
 
