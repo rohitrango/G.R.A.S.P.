@@ -10,6 +10,8 @@ def hsvConvert(rgb):
 	hsv = cv2.cvtColor(rgb,cv2.COLOR_BGR2HSV)
 	hsvColors.append(hsv)
 
+# gestures.init()
+
 cam = cv2.VideoCapture(0)
 newdefects = []
 points = [					#240*320
@@ -28,6 +30,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 # colorProfile = []								# get color profile of skin
 hsvColors = []
 noOfDefects = 0
+cnscDef = 0										# no of consecutive no-defects
 
 mask2=np.zeros((480,680),dtype=np.uint8)
 
@@ -162,10 +165,6 @@ while(True):
 
 # we have found the biggest rectangle. and filtering of defects is done above as well.
 # find the center of contours and track the point 
-# stop the gesture if no defects found, <basically fist mode> :P
-		if(noOfDefects==0):
-			gestures.StopRecording()
-			next 
 
 		if(newdefects!=[]):
 			xcenter,ycenter = 0,0
@@ -183,28 +182,7 @@ while(True):
 					cv2.circle(frame,start,5,blue,-1)
 					cv2.circle(frame,far,5,red,-1)
 
-# ''' the gesture tracking on basis of a point '''
 
-			# if(centerCount>0):				# we have a point to track
-
-			# 	# draw the circle
-			# 	xcenter/=centerCount
-			# 	ycenter/=centerCount
-			# 	# cv2.circle(frame,(xcenter,ycenter),10,yellow,2)
-
-			# 	if(gestures.prevPoint==None and gestures.nextPoint==None):	# start
-			# 		gestures.prevPoint = (xcenter,ycenter)
-			# 	elif (gestures.nextPoint == None):							# 1st iteration
-			# 		gestures.nextPoint = (xcenter,ycenter)
-			# 	else:
-			# 		gestures.prevPoint = gestures.nextPoint
-			# 		gestures.nextPoint = (xcenter,ycenter)
-			# 	gestures.recordGesture()
-
-
-		# epsilon = 0.1*cv2.arcLength(biggestCountour,True)
-
-		
 	# cv2.drawContours(frame,[biggestCountour],-1,green,3)
 	# cv2.drawContours(frame,approx,-1,red,5)
 	# cv2.drawContours(frame,hull,-1,blue,5)

@@ -3,7 +3,12 @@ import os
 from math import fabs,atan2,pi
 import cv2
 from subprocess import call
-import thread
+import json
+
+f = open('./gesturedata.json','r')
+filedata = f.read()
+gestureData = json.loads(filedata)
+f.close()
 
 prevPoint = None
 nextPoint = None
@@ -28,15 +33,23 @@ def refreshHistory():
 def checkGesture():
 	print trackGesture
 
+def init():
+	global gestureData
+	for g in gestureData:
+		print g["gesture"], g["command"]
+
 def StopRecording():
-	global trackGesture,mode
+	# print "Recording stopped"
+	global trackGesture,mode,gestureData
 	if mode=="idle":
 		pass
 	elif mode=="track":
-		if trackGesture == [1,4,2,3]:
-			call(['firefox'])
-			refreshHistory()
-			changeGestureMode("idle")
+		for g in gestureData:
+			if g["gesture"]==trackGesture:
+				call(g["command"].split(" "))
+				changeGestureMode("idle")
+				refreshHistory()	
+				break
 
 def recordGesture():
 	global ctr,addGesture,trackGesture,deleteGesture,prevGesture
@@ -45,11 +58,13 @@ def recordGesture():
 		#for (x,y,w,h) in fists:
 	# '''	cv2.rectangle(finalColor,(x,y),(x+w,y+h),(0,0,0),2)
 	# refreshHistory()'''
+	StopRecording()
 	if mode=="idle":
+		# print gestureData
 		pass
 		
 	elif mode=="track":
-		print trackGesture
+		print trackGesture								# remove after debug
 		if(functions.P2P(prevPoint,nextPoint)>100):
 			xdist = (nextPoint[0]-prevPoint[0])
 			ydist = (nextPoint[1]-prevPoint[1])
@@ -66,7 +81,7 @@ def recordGesture():
 			elif (angle>=theta and angle< 3*theta):
 				# trackGesture.append(2)
 				if(prevGesture!=6):
-					print "North east"
+					print "North East"
 					trackGesture.append(6)
 					prevGesture=6
 
@@ -79,7 +94,7 @@ def recordGesture():
 
 			elif (angle>=5*theta and angle<7*theta):
 				if(prevGesture!=5):
-					print "North west"
+					print "North West"
 					trackGesture.append(5)
 					prevGesture=5
 
@@ -112,21 +127,3 @@ def changeGestureMode(customMode):
 	mode = customMode
 	print "Entered %s mode."%customMode
 	refreshHistory()
-# if(prevPoint!=None and nextPoint!=None):
-# 		# find the rel positions
-# 		if(functions.P2P(prevPoint,nextPoint)>90):
-# 			xdist = fabs(nextPoint[0]-prevPoint[0])
-# 			ydist = fabs(nextPoint[1]-prevPoint[1])
-# 			print ctr
-# 			if xdist>ydist:
-# 				if(nextPoint[0] > prevPoint[0]):
-# 					print "Right"
-# 				else:
-# 					print "Left"
-# 			else:
-# 				if(nextPoint[1]>prevPoint[1]):
-# 					print "Down"
-# 				else:
-# 					print "Up"
-# 				print "\n\n"
-# 				ctr+=1

@@ -1,0 +1,10 @@
+[
+	{
+		"gesture" : [1,4,2,3],
+		"command" : "firefox"
+	},
+	{
+		"gesture" : [1,2,1,2],
+		"command" : "google-chrome"
+	}
+]
