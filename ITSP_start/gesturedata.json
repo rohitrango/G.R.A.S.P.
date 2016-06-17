@@ -1,10 +1,10 @@
 [
 	{
-		"gesture" : [1,4,2,3],
+		"gesture" : [2,4,6,8],				
 		"command" : "firefox"
 	},
 	{
-		"gesture" : [1,2,1,2],
+		"gesture" : [2,6,2,6],
 		"command" : "google-chrome"
 	}
 ]
