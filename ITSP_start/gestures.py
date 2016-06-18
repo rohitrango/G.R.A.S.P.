@@ -5,11 +5,13 @@ import cv2
 from subprocess import call
 import json
 
+#get gesture data
 f = open('./gesturedata.json','r')
 filedata = f.read()
 gestureData = json.loads(filedata)
 f.close()
 
+#module variables
 prevPoint = None
 nextPoint = None
 ctr = 1
@@ -18,10 +20,12 @@ trackGesture = []
 addGesture = []
 deleteGesture = []
 prevGesture = -1
+
+#misc
 theta = pi/8
 fist_cascade=cv2.CascadeClassifier('fist.xml')
 
-# direction notation, 1 is right and then onwards we have anticlockwise
+# direction notation, 1 is NW and then onwards we have clockwise
 def refreshHistory():
 	global trackGesture,addGesture,deleteGesture,prevPoint,nextPoint, prevGesture
 	trackGesture = addGesture = deleteGesture = []
@@ -33,7 +37,7 @@ def refreshHistory():
 def checkGesture():
 	print trackGesture
 
-def init():
+def init():								#just for debugging
 	global gestureData
 	for g in gestureData:
 		print g["gesture"], g["command"]
@@ -41,19 +45,16 @@ def init():
 def StopRecording():
 	# print "Recording stopped"
 	global trackGesture,mode,gestureData
+
 	if mode=="idle":
 		pass
 	elif mode=="track":
-		for g in gestureData:
-			if g["gesture"]==trackGesture:
+		for g in gestureData:						
+			if g["gesture"]==trackGesture:					## change some things here
 				call(g["command"].split(" "))
 				changeGestureMode("idle")
 				refreshHistory()	
 				break
-		if trackGesture == [1,4,2,3]:
-			call(['firefox'])
-			refreshHistory()
-			changeGestureMode("idle")
 
 def recordGesture():
 	global ctr,addGesture,trackGesture,deleteGesture,prevGesture

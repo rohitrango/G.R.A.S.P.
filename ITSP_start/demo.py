@@ -29,7 +29,6 @@ blue = (255,0,0)
 font = cv2.FONT_HERSHEY_SIMPLEX
 # colorProfile = []								# get color profile of skin
 hsvColors = []
-noOfDefects = 0
 cnscDef = 0										# no of consecutive no-defects
 
 mask2=np.zeros((480,680),dtype=np.uint8)
@@ -96,6 +95,25 @@ while(True):
 			mask3[pts]=res[pts]
 		# cv2.imshow(str(temp),res)
 		temp+=1
+
+	##########################################################################################
+	lSkin = np.array([5,38,51])
+	uSkin = np.array([17,250,242])
+	hsvFrame = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+	hsvFrame = cv2.GaussianBlur(hsvFrame,(7,7),1,1)
+	skinMask = cv2.inRange(hsvFrame,lSkin,uSkin)
+	skinMasked = cv2.bitwise_and(hsvFrame,hsvFrame,mask=skinMask)
+	skinMasked = cv2.cvtColor(skinMasked,cv2.COLOR_HSV2BGR)
+	skinMasked = cv2.cvtColor(skinMasked,cv2.COLOR_BGR2GRAY)
+	_,skinMasked = cv2.threshold(skinMasked,60,255,cv2.THRESH_BINARY)
+	
+	finalSkin = cv2.morphologyEx(skinMasked,cv2.MORPH_ERODE,np.ones((3,3),dtype=np.uint8),iterations=2)
+	finalSkin = cv2.morphologyEx(finalSkin,cv2.MORPH_OPEN,np.ones((5,5), dtype=np.uint8),iterations=1)
+	finalSkin = cv2.morphologyEx(finalSkin,cv2.MORPH_CLOSE,np.ones((9,9),dtype=np.uint8),iterations=1)
+	finalSkin = cv2.medianBlur(finalSkin,11)
+	cv2.imshow('skinMasked',skinMasked)
+	cv2.imshow('finalSkin', finalSkin)
+	#########################################################################################
 
 	mask4 = cv2.medianBlur(mask3,7)
 	mask3 = cv2.medianBlur(mask3,5)
@@ -201,8 +219,8 @@ while(True):
 	# cv2.imshow('erodeFinger',erodeFinger)
 	cv2.imshow('copymask3' , copymask3)
 	cv2.imshow('mask4', mask4)
-	cv2.imshow('blurred', blurred)
-	cv2.imshow("pyrFrame",pyrFrame)
+	# cv2.imshow('blurred', blurred)
+	# cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
 	cv2.imshow('mask3',mask3)
 
