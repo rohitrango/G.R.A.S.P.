@@ -2,7 +2,7 @@ import functions
 import os
 from math import fabs,atan2,pi
 import cv2
-from subprocess import call
+from subprocess import call,Popen
 import json
 
 #get gesture data
@@ -20,6 +20,9 @@ trackGesture = []
 addGesture = []
 deleteGesture = []
 prevGesture = -1
+prevGestureName = None
+
+currentProcess = None
 
 #misc
 theta = pi/8
@@ -44,14 +47,21 @@ def init():								#just for debugging
 
 def StopRecording():
 	# print "Recording stopped"
-	global trackGesture,mode,gestureData
+	global trackGesture,mode,gestureData,prevGestureName
 
 	if mode=="idle":
 		pass
 	elif mode=="track":
 		for g in gestureData:						
 			if g["gesture"]==trackGesture:					## change some things here
-				call(g["command"].split(" "))
+				# if default gesture, perform action, else perform terminal command
+				if g["default"]=="true":
+					playDefaultAction(g)
+
+				elif g["default"]=="false":
+					Popen(g["command"])
+					prevGestureName = None
+
 				changeGestureMode("idle")
 				refreshHistory()	
 				break
@@ -133,3 +143,41 @@ def changeGestureMode(customMode):
 	mode = customMode
 	print "Entered %s mode."%customMode
 	refreshHistory()
+
+def playDefaultAction(gesture):
+	global prevGestureName
+
+	## Main commands
+	if(gesture["command"]=="google-chrome"):
+		Popen('google-chrome')
+		prevGestureName = "google-chrome"
+
+	elif(gesture["command"]=="firefox"):
+		Popen('firefox')
+		prevGesture = "firefox"
+
+	elif(gesture["command"]=="rhythmbox"):
+		Popen("rhythmbox-client")
+		prevGestureName = "rhythmbox"
+
+	## Misc actions which are common to default actions
+	elif(gesture["command"]=="volUp"):
+
+		if(prevGestureName=="rhythmbox"):
+			print "Volume increased."
+			Popen("rhythmbox-client --volume-up".split(" "))
+
+	elif(gesture["command"]=="volDown"):
+
+		if(prevGestureName=="rhythmbox"):
+			print "Volume decreased."
+			Popen("rhythmbox-client --volume-up".split(" "))
+
+	elif(gesture["command"]=="close"):
+
+		if(prevGestureName=="rhythmbox"):
+			print "Rhythmbox closed."
+			Popen("rhythmbox-client --quit".split(" "))
+			prevGestureName = None
+
+
