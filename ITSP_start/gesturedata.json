@@ -28,6 +28,16 @@
 		"gesture" : [5,2,7],
 		"command" : "close",
 		"default" : "true"
+	},
+	{
+		"gesture" : [3,5],
+		"command" : "previous",
+		"default" : "true"
+	},
+	{
+		"gesture" : [1,7],
+		"command" : "next",
+		"default" : "true"
 	}
 
 ]

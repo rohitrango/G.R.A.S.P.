@@ -62,7 +62,7 @@ def StopRecording():
 					Popen(g["command"])
 					prevGestureName = None
 
-				changeGestureMode("idle")
+				# changeGestureMode("idle")
 				refreshHistory()	
 				break
 
@@ -149,11 +149,11 @@ def playDefaultAction(gesture):
 
 	## Main commands
 	if(gesture["command"]=="google-chrome"):
-		Popen('google-chrome')
+		currentProcess = Popen('google-chrome'.split(" "))
 		prevGestureName = "google-chrome"
 
 	elif(gesture["command"]=="firefox"):
-		Popen('firefox')
+		currentProcess = Popen('firefox'.split(" "))
 		prevGesture = "firefox"
 
 	elif(gesture["command"]=="rhythmbox"):
@@ -173,11 +173,37 @@ def playDefaultAction(gesture):
 			print "Volume decreased."
 			Popen("rhythmbox-client --volume-up".split(" "))
 
+	elif(gesture["command"]=="previous"):
+
+		if prevGestureName=="rhythmbox":
+			print "Playing previous song."
+			Popen("rhythmbox-client --previous".split(" "))
+
+	elif(gesture["command"]=="next"):
+
+		if prevGestureName=="rhythmbox":
+			print "Playing next song."
+			Popen("rhythmbox-client --next".split(" "))
+
 	elif(gesture["command"]=="close"):
 
 		if(prevGestureName=="rhythmbox"):
 			print "Rhythmbox closed."
 			Popen("rhythmbox-client --quit".split(" "))
-			prevGestureName = None
 
+		elif prevGestureName=="google-chrome":
+			try:
+				currentProcess.terminate()
+			except:
+				print "Session doesnot exist. Did you close it by yourself?"
+			currentProcess = None
+
+		elif prevGestureName=="firefox":
+			try:
+				currentProcess.terminate()
+			except:
+				print "Session doesnot exist. Did you close it by yourself?"
+			currentProcess = None
+
+		prevGestureName = None
 
