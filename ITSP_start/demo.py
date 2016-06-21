@@ -81,7 +81,7 @@ while(True):
 		myBlur = cv2.cvtColor(blurred,cv2.COLOR_BGR2HSV)
 		# h = hsvColor[0][0][0]
 		h = hsvColor[0]
-		lowerCol = np.array([h-10,100,100])
+		lowerCol = np.array([max(3.0,h-10),100,100])
 		upperCol = np.array([h+10,255,255])
 		mask = cv2.inRange(myBlur,lowerCol,upperCol)
 		res = cv2.bitwise_and(blurred,blurred,mask=mask)
