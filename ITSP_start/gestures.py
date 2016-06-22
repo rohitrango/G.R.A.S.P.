@@ -185,6 +185,18 @@ def playDefaultAction(gesture):
 			print "Playing next song."
 			Popen("rhythmbox-client --next".split(" "))
 
+	elif(gesture["command"]=="pause"):
+
+		if(prevGestureName=="rhythmbox"):
+			print "Music paused."
+			Popen("rhythmbox-client --pause".split(" "))
+
+	elif(gesture["command"]=="play"):
+
+		if(prevGestureName=="rhythmbox"):
+			print "Music resumed."
+			Popen("rhythmbox-client --play".split(" "))
+					
 	elif(gesture["command"]=="close"):
 
 		if(prevGestureName=="rhythmbox"):
