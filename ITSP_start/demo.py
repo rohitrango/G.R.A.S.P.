@@ -138,7 +138,7 @@ while(True):
 		except:
 			print "No Hull"
 		approx = cv2.approxPolyDP(biggestCountour,18,True)
-		defects = cv2.convexityDefects(biggestCountour,hull)
+		#defects = cv2.convexityDefects(biggestCountour,hull)//because, we are not using this, so there is no need of it
 
 		x,y,w,h = cv2.boundingRect(biggestCountour)
 		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
@@ -165,41 +165,7 @@ while(True):
 		# we have the defects, time to remove redundant ones
 		newdefects = []
 
-		if(defects!=None):
-			for i in range(defects.shape[0]):
-			    s,e,f,d = defects[i,0]
-			    start = tuple(biggestCountour[s][0])
-			    end = tuple(biggestCountour[e][0])
-			    far = tuple(biggestCountour[f][0])
-			    # cv2.line(frame,start,end,green,2)
-			    # cv2.circle(frame,start,5,blue,-1)
-			    # cv2.circle(frame,far,5,red,-1)
-
-			    if (min(P2P(start,far),P2P(end,far)) >= 0.25*h) and (angle(start,far,end)<=80.0*math.pi/180):
-			    	newdefects.append([start,end,far])
-			    	noOfDefects+=1
-			    else:
-			    	newdefects.append([start,end,-1])
-
-# we have found the biggest rectangle. and filtering of defects is done above as well.
-# find the center of contours and track the point 
-
-		if(newdefects!=[]):
-			xcenter,ycenter = 0,0
-			centerCount=0
-			
-			for i in newdefects:
-				start = i[0]
-				end = i[1]
-				far = i[2]
-				cv2.line(frame,start,end,(0,255,0),2)
-				if(far!=-1):
-					xcenter+=far[0]			#finding center of x,y
-					ycenter+=far[1]
-					centerCount+=1
-					cv2.circle(frame,start,5,blue,-1)
-					cv2.circle(frame,far,5,red,-1)
-
+# 		1
 
 	# cv2.drawContours(frame,[biggestCountour],-1,green,3)
 	# cv2.drawContours(frame,approx,-1,red,5)
