@@ -1,6 +1,6 @@
 import cv2, sys, numpy as np
 
-if(len(sys.argv)==2):
+iflen(sys.argv)==2:
 	cascPath = sys.argv[1]
 else:
 	cascPath = "faceCascade.xml"

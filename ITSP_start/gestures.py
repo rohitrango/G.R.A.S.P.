@@ -59,10 +59,10 @@ def StopRecording():
 					playDefaultAction(g)
 
 				elif g["default"]=="false":
-					Popen(g["command"])
+					currentProcess = Popen(g["command"])
 					prevGestureName = None
 
-				# changeGestureMode("idle")
+				changeGestureMode("idle")
 				refreshHistory()	
 				break
 
@@ -157,7 +157,7 @@ def playDefaultAction(gesture):
 		prevGesture = "firefox"
 
 	elif(gesture["command"]=="rhythmbox"):
-		Popen("rhythmbox-client")
+		Popen("rhythmbox-client --play".split(" "))
 		prevGestureName = "rhythmbox"
 
 	## Misc actions which are common to default actions
@@ -193,14 +193,14 @@ def playDefaultAction(gesture):
 
 		elif prevGestureName=="google-chrome":
 			try:
-				currentProcess.terminate()
+				currentProcess.kill()
 			except:
 				print "Session doesnot exist. Did you close it by yourself?"
 			currentProcess = None
 
 		elif prevGestureName=="firefox":
 			try:
-				currentProcess.terminate()
+				currentProcess.kill()
 			except:
 				print "Session doesnot exist. Did you close it by yourself?"
 			currentProcess = None
