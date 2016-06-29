@@ -22,6 +22,16 @@
 		"default" : "true"	
 	},
 	{
+		"gesture" : [2,6,4],
+		"command" : "play",
+		"default" : "true"
+	},
+	{
+		"gesture" : [2,6,8],
+		"command" : "pause",
+		"default" : "true"
+	},
+	{
 		"gesture" : [7,6],
 		"command" : "volDown",
 		"default" : "true"
