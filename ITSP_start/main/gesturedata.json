@@ -1,0 +1,55 @@
+[
+	{
+		"gesture" : [2,5,3,6],				
+		"command" : "firefox",
+		"urls" : ["https://google.com","https://gmail.com","https://youtube.com","https://quora.com"],
+		"default" : "true"
+	},
+	{
+		"gesture" : [2,6,2,6],
+		"command" : "google-chrome",
+		"urls" : ["https://google.com","https://gmail.com","https://youtube.com","https://quora.com"],
+		"default" : "true"
+	},
+	{
+		"gesture" : [2,4,6,7],
+		"command" : "rhythmbox",
+		"default" : "true"
+	},
+	{
+		"gesture" : [3,2],
+		"command" : "volUp",
+		"default" : "true"	
+	},
+	{
+		"gesture" : [2,6,4],
+		"command" : "play",
+		"default" : "true"
+	},
+	{
+		"gesture" : [2,6,8],
+		"command" : "pause",
+		"default" : "true"
+	},
+	{
+		"gesture" : [7,6],
+		"command" : "volDown",
+		"default" : "true"
+	},
+	{
+		"gesture" : [5,2,7],
+		"command" : "close",
+		"default" : "true"
+	},
+	{
+		"gesture" : [3,5],
+		"command" : "next",
+		"default" : "true"
+	},
+	{
+		"gesture" : [1,7],
+		"command" : "previous",
+		"default" : "true"
+	}
+
+]

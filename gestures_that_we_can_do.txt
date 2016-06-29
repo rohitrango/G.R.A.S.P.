@@ -1,0 +1,35 @@
+basically we will want to open such things for which we don't require keyboard or mouse later on..
+
+1.	Watching a movie on vlc
+		-increasing/decreasing volume
+		-fast forward
+		-toggle between full screen and normal screen
+		-pause/play
+
+2.	Opening youtube
+		-switching songs
+		-starting from last played song
+		-increasing/decreasing volume
+		-toggle between full screen and normal screen
+		-pause/play
+
+3.	opening chrome
+		-opening facebook page directly
+			-opening/closing the notifications tab
+		-opening gmail(of course already signed in account)
+
+4.	opening terminal
+		-I haven't found any use as of now(As ultimately you have to use keyboard)
+		-Maybe update and upgrade can be done with a gesture
+
+5.	open camera
+		-take video or picture using different gestures
+		-Of course we have to implement for pause/play/stop for video recording
+
+6.	Take screenshot
+		-toggle between grabbing the particular window or the entire screen
+
+7.  Open firefox
+		- some default pages opening up
+
+I have come up with these many.. Do edit if you get more!
