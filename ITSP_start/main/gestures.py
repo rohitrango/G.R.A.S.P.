@@ -165,13 +165,15 @@ def playDefaultAction(gesture):
 
 		if(prevGestureName=="rhythmbox"):
 			print "Volume increased."
-			Popen("rhythmbox-client --volume-up".split(" "))
+			for i in range(3):
+				Popen("rhythmbox-client --volume-up".split(" "))
 
 	elif(gesture["command"]=="volDown"):
 
 		if(prevGestureName=="rhythmbox"):
 			print "Volume decreased."
-			Popen("rhythmbox-client --volume-up".split(" "))
+			for i in range(3):
+				Popen("rhythmbox-client --volume-up".split(" "))
 
 	elif(gesture["command"]=="previous"):
 
