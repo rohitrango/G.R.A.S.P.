@@ -1,12 +1,14 @@
 [
 	{
-		"gesture" : [2,4,6,8],				
+		"gesture" : [2,5,3,6],				
 		"command" : "firefox",
+		"urls" : ["https://google.com","https://gmail.com","https://youtube.com","https://quora.com"],
 		"default" : "true"
 	},
 	{
 		"gesture" : [2,6,2,6],
 		"command" : "google-chrome",
+		"urls" : ["https://google.com","https://gmail.com","https://youtube.com","https://quora.com"],
 		"default" : "true"
 	},
 	{
@@ -31,12 +33,12 @@
 	},
 	{
 		"gesture" : [3,5],
-		"command" : "previous",
+		"command" : "next",
 		"default" : "true"
 	},
 	{
 		"gesture" : [1,7],
-		"command" : "next",
+		"command" : "previous",
 		"default" : "true"
 	}
 

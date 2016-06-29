@@ -58,8 +58,11 @@ def StopRecording():
 				if g["default"]=="true":
 					playDefaultAction(g)
 
-				elif g["default"]=="false":
-					currentProcess = Popen(g["command"])
+				elif g["default"]=="false":				# not default, just open the process
+					try:
+						currentProcess = Popen(g["command"].split(" "))
+					except:
+						print "Invalid command."
 					prevGestureName = None
 
 				changeGestureMode("idle")
@@ -68,24 +71,19 @@ def StopRecording():
 
 def recordGesture():
 	global ctr,addGesture,trackGesture,deleteGesture,prevGesture
-	#fists = fist_cascade.detectMultiScale(frame, 1.3, 5)
-	#if fists!=None:
-		#for (x,y,w,h) in fists:
-	# '''	cv2.rectangle(finalColor,(x,y),(x+w,y+h),(0,0,0),2)
-	# refreshHistory()'''
+
 	StopRecording()
 	if mode=="idle":
 		# print gestureData
 		pass
 		
 	elif mode=="track":
-		print trackGesture								# remove after debug
-		if(functions.P2P(prevPoint,nextPoint)>100):
+		# print trackGesture								# remove after debug
+		if(functions.P2P(prevPoint,nextPoint)>80):
 			xdist = (nextPoint[0]-prevPoint[0])
 			ydist = (nextPoint[1]-prevPoint[1])
 
 			angle = atan2(-ydist,xdist) 				# since in image, y axis is inverted
-			# print angle,"\n\n\n"
 
 			if (angle>=-theta and angle<theta):
 				if(prevGesture!=4):
@@ -137,6 +135,8 @@ def recordGesture():
 					print "South East"
 					trackGesture.append(5)
 					prevGesture=5
+
+			print trackGesture
 	
 def changeGestureMode(customMode):
 	global mode
@@ -145,16 +145,16 @@ def changeGestureMode(customMode):
 	refreshHistory()
 
 def playDefaultAction(gesture):
-	global prevGestureName
+	global prevGestureName,currentProcess
 
 	## Main commands
 	if(gesture["command"]=="google-chrome"):
-		currentProcess = Popen('google-chrome'.split(" "))
+		currentProcess = Popen(('google-chrome '+" ".join(gesture["urls"])).split(" "))
 		prevGestureName = "google-chrome"
 
 	elif(gesture["command"]=="firefox"):
-		currentProcess = Popen('firefox'.split(" "))
-		prevGesture = "firefox"
+		currentProcess = Popen(('firefox '+" ".join(gesture["urls"])).split(" "))
+		prevGestureName = "firefox"
 
 	elif(gesture["command"]=="rhythmbox"):
 		Popen("rhythmbox-client --play".split(" "))
@@ -190,17 +190,20 @@ def playDefaultAction(gesture):
 		if(prevGestureName=="rhythmbox"):
 			print "Rhythmbox closed."
 			Popen("rhythmbox-client --quit".split(" "))
+			currentProcess = None
 
 		elif prevGestureName=="google-chrome":
 			try:
-				currentProcess.kill()
+				currentProcess.terminate()
+				print "Chrome process killed."
 			except:
 				print "Session doesnot exist. Did you close it by yourself?"
 			currentProcess = None
 
 		elif prevGestureName=="firefox":
 			try:
-				currentProcess.kill()
+				currentProcess.terminate()
+				print "Firefox process killed."
 			except:
 				print "Session doesnot exist. Did you close it by yourself?"
 			currentProcess = None

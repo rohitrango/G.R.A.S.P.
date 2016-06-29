@@ -97,22 +97,22 @@ while(True):
 		temp+=1
 
 	##########################################################################################
-	lSkin = np.array([5,38,51])
-	uSkin = np.array([17,250,242])
-	hsvFrame = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-	hsvFrame = cv2.GaussianBlur(hsvFrame,(7,7),1,1)
-	skinMask = cv2.inRange(hsvFrame,lSkin,uSkin)
-	skinMasked = cv2.bitwise_and(hsvFrame,hsvFrame,mask=skinMask)
-	skinMasked = cv2.cvtColor(skinMasked,cv2.COLOR_HSV2BGR)
-	skinMasked = cv2.cvtColor(skinMasked,cv2.COLOR_BGR2GRAY)
-	_,skinMasked = cv2.threshold(skinMasked,60,255,cv2.THRESH_BINARY)
+	# lSkin = np.array([5,38,51])
+	# uSkin = np.array([17,250,242])
+	# hsvFrame = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+	# hsvFrame = cv2.GaussianBlur(hsvFrame,(7,7),1,1)
+	# skinMask = cv2.inRange(hsvFrame,lSkin,uSkin)
+	# skinMasked = cv2.bitwise_and(hsvFrame,hsvFrame,mask=skinMask)
+	# skinMasked = cv2.cvtColor(skinMasked,cv2.COLOR_HSV2BGR)
+	# skinMasked = cv2.cvtColor(skinMasked,cv2.COLOR_BGR2GRAY)
+	# _,skinMasked = cv2.threshold(skinMasked,60,255,cv2.THRESH_BINARY)
 	
-	finalSkin = cv2.morphologyEx(skinMasked,cv2.MORPH_ERODE,np.ones((3,3),dtype=np.uint8),iterations=2)
-	finalSkin = cv2.morphologyEx(finalSkin,cv2.MORPH_OPEN,np.ones((5,5), dtype=np.uint8),iterations=1)
-	finalSkin = cv2.morphologyEx(finalSkin,cv2.MORPH_CLOSE,np.ones((9,9),dtype=np.uint8),iterations=1)
-	finalSkin = cv2.medianBlur(finalSkin,11)
-	cv2.imshow('skinMasked',skinMasked)
-	cv2.imshow('finalSkin', finalSkin)
+	# finalSkin = cv2.morphologyEx(skinMasked,cv2.MORPH_ERODE,np.ones((3,3),dtype=np.uint8),iterations=2)
+	# finalSkin = cv2.morphologyEx(finalSkin,cv2.MORPH_OPEN,np.ones((5,5), dtype=np.uint8),iterations=1)
+	# finalSkin = cv2.morphologyEx(finalSkin,cv2.MORPH_CLOSE,np.ones((9,9),dtype=np.uint8),iterations=1)
+	# finalSkin = cv2.medianBlur(finalSkin,11)
+	# cv2.imshow('skinMasked',skinMasked)
+	# cv2.imshow('finalSkin', finalSkin)
 	#########################################################################################
 
 	mask4 = cv2.medianBlur(mask3,7)
@@ -137,19 +137,23 @@ while(True):
 			hull = cv2.convexHull(biggestCountour, returnPoints=False)
 		except:
 			print "No Hull"
-		approx = cv2.approxPolyDP(biggestCountour,18,True)
+			
+		# approx = cv2.approxPolyDP(biggestCountour,18,True)
 		defects = cv2.convexityDefects(biggestCountour,hull)
 
 		x,y,w,h = cv2.boundingRect(biggestCountour)
 		cv2.rectangle(frame,(x,y),(x+w,y+h),blue,2)
-
+		
 		# we need to find the moments
 		M = cv2.moments(biggestCountour)
 
 		cx = cy = None
 		if(M['m00']!=0):
-			cx = int(M['m10']/M['m00'])
-			cy = int(M['m01']/M['m00'])
+			# cx = int(M['m10']/M['m00'])
+			# cy = int(M['m01']/M['m00'])
+			cx = x + int(w/2)
+			cy = y + int(h/2)
+
 			# print cx,cy , "\n\n\n\n"
 			cv2.circle(frame,(cx,cy),10,yellow,2)
 
@@ -217,8 +221,10 @@ while(True):
 	erodeFinger = cv2.erode(erodeMask,anotherKernel,iterations=2)
 
 	# cv2.imshow('erodeFinger',erodeFinger)
-	cv2.imshow('copymask3' , copymask3)
-	cv2.imshow('mask4', mask4)
+	
+	# cv2.imshow('copymask3' , copymask3)
+	# cv2.imshow('mask4', mask4)
+	
 	# cv2.imshow('blurred', blurred)
 	# cv2.imshow("pyrFrame",pyrFrame)
 	cv2.imshow('frame',frame)
